@@ -54,3 +54,12 @@ pipeline {
         }
     }
 }
+stage('Verify Test Results') {
+    steps {
+        sh '''
+            echo "Checking test results..."
+            ls -la test-results/
+            [ -f test-results/junit.xml ] || exit 1
+        '''
+    }
+}
