@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'NodeJS_24.4.1' // Должно совпадать с именем в настройках Jenkins
+        nodejs 'NodeJS 24.4.1' // Должно совпадать с именем в настройках Jenkins
     }
 
     stages {
