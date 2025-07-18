@@ -15,9 +15,8 @@ pipeline {
         stage('Setup') {
             steps {
                 sh '''
-                    echo "Node.js version: $(node --version)"
-                    echo "Yarn version: $(yarn --version)"
-                    echo "Installing dependencies..."
+                    echo "Node.js: $(node --version)"
+                    echo "Yarn: $(yarn --version)"
                 '''
             }
         }
@@ -31,8 +30,12 @@ pipeline {
         stage('Test') {
             steps {
                 sh '''
+                    echo "Creating test-results directory..."
                     mkdir -p test-results
-                    yarn test:ci || echo "Tests failed but continuing pipeline"
+                    echo "Running tests..."
+                    yarn test:ci
+                    echo "Checking test results..."
+                    ls -la test-results/
                 '''
             }
             post {
@@ -52,12 +55,8 @@ pipeline {
 
     post {
         always {
+            sh 'ls -la'  // Для диагностики
             cleanWs()
-        }
-        failure {
-            emailext body: 'Build failed: ${BUILD_URL}',
-                    subject: 'FAILED: ${JOB_NAME} - Build #${BUILD_NUMBER}',
-                    to: 'team@example.com'
         }
     }
 }
