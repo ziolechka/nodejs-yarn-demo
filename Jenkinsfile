@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'NodeJS 24.4.1' // Должно совпадать с именем в настройках Jenkins
+        nodejs 'NodeJS 24.4.1'
     }
 
     stages {
@@ -25,19 +25,18 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'yarn install --frozen-lockfile --prefer-offline'
+                sh 'yarn install --frozen-lockfile'
             }
         }
 
         stage('Test') {
             steps {
-                sh '''
-                    yarn test --ci --testResultsProcessor="jest-junit"
-                '''
+                sh 'yarn test:ci'
             }
             post {
                 always {
-                    junit 'junit.xml' // Теперь отчет будет создаваться в корне проекта
+                    junit 'test-results/junit.xml'
+                    archiveArtifacts artifacts: 'test-results/*.xml'
                 }
             }
         }
